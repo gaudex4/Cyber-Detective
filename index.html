@@ -1,14 +1,528 @@
 <!DOCTYPE html>
+<html lang="it">
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Detective🛡️</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a1a; }
+    button { transition: opacity 0.15s, transform 0.1s; }
+    button:hover { opacity: 0.85; transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+  </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber Detective</title>
 </head>
 <body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const scenarios = [
+  {
+    id:1, type:"email", difficulty:"normal", title:"Premio inaspettato",
+    sender:"premi@vincite-speciali.com", senderName:"Concorsi Italia",
+    subject:"🎉 Complimenti! Hai vinto un iPhone 16 Pro!",
+    body:"Gentile utente,\n\nSiamo lieti di comunicarti che sei stato estratto come vincitore del nostro concorso mensile!\n\n🏆 PREMIO: iPhone 16 Pro (valore €1.299)\n\nHai 10 minuti per rivendicare il tuo premio cliccando il link qui sotto. Trascorso questo tempo, il premio verrà assegnato a un altro partecipante.\n\n➡️ CLICCA QUI PER RICHIEDERE IL PREMIO ⬅️\n\nCordiali saluti,\nTeam Concorsi Italia",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Congratulazioni! Hai appena donato i tuoi dati a un truffatore. Lui ti ringrazia di cuore — davvero.",explanation:"L'urgenza artificiale ('10 minuti!') è una tattica classica di phishing. I concorsi veri non richiedono azioni immediate sotto pressione. Non hai partecipato a nessun concorso."},
+      report:{points:10,irony:"Perfetto. Segnalare aiuta anche altri utenti a non cadere nella trappola.",explanation:"Segnalare email sospette al provider di posta è l'azione più utile: proteggi te stesso e gli altri. I provider usano queste segnalazioni per bloccare campagne di phishing."},
+      delete:{points:5,irony:"Bene, ma da solo non basta: qualcun altro potrebbe riceverla.",explanation:"Eliminare è prudente, ma segnalare sarebbe stato meglio. Tuttavia hai evitato il pericolo."}
+    }
+  },
+  {
+    id:2, type:"email", difficulty:"normal", title:"Conto bloccato",
+    sender:"sicurezza@unicredit-verifica.net", senderName:"UniCredit Sicurezza",
+    subject:"⚠️ URGENTE: Accesso al tuo conto sospeso",
+    body:"Gentile Cliente,\n\nAbbiamo rilevato accessi non autorizzati al tuo conto corrente.\n\nPer proteggere i tuoi risparmi, il tuo conto è stato temporaneamente sospeso.\n\n🔴 Per riattivarlo SUBITO inserisci:\n• Codice utente\n• Password\n• PIN del bancomat\n• Codice OTP\n\n➡️ Accedi ora al portale sicuro ⬅️\n\nSe non agisci entro 24 ore, il tuo conto verrà chiuso definitivamente.\n\nUniCredit Servizio Clienti",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Hai appena consegnato le chiavi di casa tua a uno sconosciuto. Letteralmente.",explanation:"Nessuna banca chiede mai PIN, password E codice OTP tutti insieme via email. Mai. Questo è un segnale inequivocabile di phishing. Nota anche il dominio: 'unicredit-verifica.net' non è il sito ufficiale."},
+      report:{points:10,irony:"Ottima mossa. Le banche ti sono grate per questo.",explanation:"Segnalare tentativi di phishing bancario è fondamentale. Puoi anche contattare direttamente la tua banca per avvisarli che qualcuno sta usando il loro nome."},
+      delete:{points:5,irony:"Sicuro, ma la truffa continua a girare.",explanation:"Hai protetto te stesso. Segnalare avrebbe aiutato anche gli altri clienti della stessa banca."}
+    }
+  },
+  {
+    id:3, type:"email", difficulty:"normal", title:"Allegato del collega",
+    sender:"marco.rossi@azienda-corp.it", senderName:"Marco Rossi",
+    subject:"DocumentoUrgente.zip",
+    body:"Ciao,\n\nti mando questo.\n\n📎 DocumentoUrgente_Revisione_FINALE_v3.zip (2.4 MB)\n\nFammelo sapere.\n\nMarco",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Complimenti. Hai appena installato un ransomware. L'IT ti ama già.",explanation:"Gli allegati .zip non richiesti sono una delle tecniche più usate per diffondere malware. L'email sembra provenire da un collega, ma l'account potrebbe essere compromesso. Regola d'oro: mai aprire allegati non attesi senza verificare prima per telefono o di persona."},
+      report:{points:5,irony:"Prudente. Anche se Marco potrebbe offendersi se era davvero lui.",explanation:"Segnalare è utile, ma in questo caso verificare direttamente con il collega sarebbe stata la mossa ideale. L'eliminazione immediata è l'azione più sicura."},
+      delete:{points:10,irony:"Perfetto. Se era importante, Marco ti manderà una email seria.",explanation:"Con allegati sospetti, eliminare senza aprire è la scelta migliore. Se l'allegato era legittimo, il collega ti ricontatterà con più contesto."}
+    }
+  },
+  {
+    id:4, type:"sms", difficulty:"normal", title:"Pacco in sospeso",
+    sender:"+39 333 1234567", senderName:"BRT Corriere",
+    body:"BRT: Il tuo pacco n.IT847291 non può essere consegnato. Tassa doganale di €1,99 non pagata. Paga ora: http://brt-pagamento.tk/IT847291\n\nIgnorare questo messaggio comporterà la restituzione del pacco.",
+    choices:{
+      click:{points:"GAMEOVER",irony:"€1,99 per perdere tutti i dati della tua carta. Affare del secolo (per lui).",explanation:"Questo è un classico 'smishing' (SMS phishing). Nota: dominio .tk sospetto, numero non ufficiale, senso di urgenza. I corrieri veri usano domini propri e non chiedono pagamenti via SMS con link abbreviati."},
+      report:{points:10,irony:"Bravo. Hai aiutato a fermare la catena.",explanation:"Puoi segnalare SMS di phishing al tuo operatore telefonico (di solito inoltrandolo al 7726) e alla Polizia Postale."},
+      delete:{points:5,irony:"Bene. Il pacco forse non esiste nemmeno.",explanation:"Hai evitato la truffa. Segnalare avrebbe aggiunto valore, ma eliminare è comunque la scelta giusta."}
+    }
+  },
+  {
+    id:5, type:"email", difficulty:"normal", title:"Rinnovo Netflix",
+    sender:"noreply@netflix-billing.support", senderName:"Netflix",
+    subject:"Il tuo abbonamento Netflix scadrà domani",
+    body:"Gentile abbonato,\n\nAbbiamo riscontrato un problema con il metodo di pagamento associato al tuo account Netflix.\n\nIl tuo abbonamento scadrà DOMANI se non aggiorni i dati di pagamento.\n\n➡️ Aggiorna il metodo di pagamento ⬅️\n\nSe non aggiorni entro 24 ore, perderai l'accesso a tutto il catalogo Netflix.\n\n© Netflix Inc.",
+    choices:{
+      click:{points:0,irony:"Potresti aver consegnato i dati della tua carta. Guarda il dominio mittente.",explanation:"Non è GAME OVER solo perché potresti aver notato qualcosa di strano. Ma 'netflix-billing.support' NON è netflix.com. Il logo realistico distrae dall'unica cosa che conta: il dominio del mittente."},
+      report:{points:10,irony:"Occhio di falco sul dominio. Rispetto.",explanation:"Hai identificato il segnale più importante: il dominio del mittente. Netflix usa sempre @netflix.com. Qualsiasi altro dominio, per quanto simile, è sospetto."},
+      delete:{points:5,irony:"Ben fatto. Se Netflix ha davvero un problema, ti avvisa nell'app.",explanation:"Eliminare è una scelta prudente. Controlla sempre direttamente l'app o il sito ufficiale per problemi con abbonamenti, mai tramite link email."}
+    }
+  },
+  {
+    id:6, type:"instagram", difficulty:"normal", title:"Richiesta urgente di un amico",
+    sender:"nerigiorgi_", senderName:"Neri Giorgi",
+    body:"Ciao!! Sono in un guaio enorme 😭\n\nSono rimasto senza soldi a Madrid, mi hanno rubato il portafoglio e il telefono si sta scaricando.\n\nPuoi farmi un bonifico di 200€? Te li rendo subito lunedì promesso 🙏🙏\n\nEcco il mio IBAN: IT60 X054 2811 1010 0000 0123 456\n\nSto piangendo, ho bisogno di aiuto",
+    choices:{
+      click:{points:"GAMEOVER",irony:"200€ per scoprire che Neri era tranquillo a casa sua. La truffa del 'sono bloccato' è classica.",explanation:"Questa è la 'truffa dell'amico bloccato'. L'account di Neri è stato probabilmente rubato. Prima di qualsiasi pagamento, chiama sempre direttamente la persona per verificare."},
+      report:{points:0,irony:"Esagerato! Non è game over ma ci sei andato vicino",explanation:"Segnalare l'account è poco utile,dato che la cosa più importante è contattare Giada tramite altri canali (telefono, WhatsApp) per avvisarla che il suo Instagram è stato violato."},
+      delete:{points:10,irony:"Saggio. E poi chiama Neri per davvero — sull'account rubato, non sul bonifico.",explanation:"Non rispondere e non inviare denaro è la scelta giusta. Contatta sempre la persona tramite un canale diverso (chiamata diretta) per verificare."}
+    }
+  },
+  {
+    id:7, type:"email", difficulty:"normal", title:"Email dalla tua università",
+    sender:"segreteria@unibo.it", senderName:"Università di Bologna - Segreteria",
+    subject:"Comunicazione ufficiale: rinnovo iscrizione a.a. 2024/25",
+    body:"Gentile studente,\n\nLe ricordiamo che la scadenza per il rinnovo dell'iscrizione all'anno accademico 2024/25 è il 31 ottobre 2024.\n\nPer procedere:\n1. Accedere all'Almaesami con le credenziali istituzionali\n2. Selezionare \"Rinnovo iscrizione\"\n3. Completare il pagamento della prima rata\n\n➡️ Accedi ad Almaesami ⬅️\n\nPer assistenza: segreteria@unibo.it | Tel. 051 209 8888\n\nSegreteria Studenti\nUniversità di Bologna",
+    choices:{
+      click:{points:10,irony:"Bravo! Saper riconoscere le comunicazioni legittime è importante quanto riconoscere le truffe.",explanation:"Questa email ha tutti i segnali di legittimità: dominio ufficiale @unibo.it, procedure standard, contatti verificabili, nessuna urgenza esasperata, nessuna richiesta di dati sensibili."},
+      report:{points:0,irony:"La segreteria sarà molto confusa dalla tua segnalazione.",explanation:"Questa era una comunicazione legittima. Segnalare email reali come spam crea problemi: potresti perdere comunicazioni importanti e creare disagi inutili."},
+      delete:{points:5,irony:"Prudente, ma potresti perdere la scadenza di iscrizione.",explanation:"Eliminare per eccesso di cautela non è ottimale. Impara a verificare i segnali di legittimità: dominio mittente, tipo di richiesta, presenza di contatti verificabili."}
+    }
+  },
+  {
+    id:8, type:"popup", difficulty:"normal", title:"Allarme virus nel browser",
+    sender:"Avviso di sistema", senderName:"Sistema",
+    subject:"⚠️ ATTENZIONE: 12 VIRUS RILEVATI",
+    body:"🔴 ATTENZIONE CRITICA!\n\nIl tuo dispositivo ha rilevato 12 VIRUS PERICOLOSI!\n\n⚠️ I tuoi dati personali sono a RISCHIO IMMEDIATO\n⚠️ Le tue password potrebbero essere state rubate\n⚠️ La tua webcam potrebbe essere compromessa\n\nDevi agire ORA per proteggere il tuo dispositivo!\n\n✅ RIMUOVI I VIRUS SUBITO\n\n[Clicca qui per la rimozione immediata]\n\nSe chiudi questa finestra perderai TUTTI i tuoi file.",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Ironia della sorte: cliccando, hai installato esattamente il virus che non avevi.",explanation:"I siti web NON possono rilevare virus sul tuo dispositivo. Questo è un classico 'scareware': ti spaventa per farti scaricare un falso antivirus che è in realtà un malware. Chiudi sempre queste finestre tramite il gestore attività, senza cliccare nulla."},
+      report:{points:5,irony:"Bene, ma il popup è già sparito...",explanation:"Segnalare il sito al browser (c'è sempre un'opzione 'Segnala sito pericoloso') è utile per proteggere altri utenti ma non è sempre la miglior mossa"},
+      delete:{points:10,irony:"Saggio. Chiudi tutto e vai avanti.",explanation:"La risposta corretta allo scareware è chiudere il browser (o il tab) immediatamente senza cliccare nulla nella finestra di popup. Se necessario, usa Ctrl+Alt+Canc per forzare la chiusura."}
+    }
+  },
+  {
+    id:9, type:"email", difficulty:"normal", title:"Reset password aziendale",
+    sender:"it-helpdesk@tuaazienda.it", senderName:"IT Helpdesk Aziendale",
+    subject:"Rinnovo obbligatorio password — scadenza oggi",
+    body:"Ciao,\n\nCome da policy aziendale, la tua password scade oggi.\n\nAccedi al portale IT per aggiornarla:\n➡️ it.tuaazienda.it/password-reset\n\nHai tempo fino alle 17:00 di oggi. Dopo questa ora non potrai accedere ai sistemi aziendali fino al prossimo giorno lavorativo.\n\nPer assistenza: interno 234 o it-helpdesk@tuaazienda.it\n\nIT Department",
+    choices:{
+      click:{points:10,irony:"Corretto! Le policy IT esistono per una ragione.",explanation:"Questa email ha tutti i segnali di una comunicazione IT legittima: dominio aziendale coerente, procedura standard, link al dominio aziendale, contatto verificabile. Seguire le policy di sicurezza IT è importante."},
+      report:{points:0,irony:"L'IT helpdesk ti chiamerà perplesso.",explanation:"Questa era una richiesta IT legittima. Segnalarla crea confusione e potrebbe farti perdere l'accesso ai sistemi aziendali."},
+      delete:{points:0,irony:"Prudente, ma domani mattina non entri nei sistemi.",explanation:"Se hai dubbi su una comunicazione IT aziendale, verifica chiamando direttamente l'helpdesk invece di eliminare."}
+    }
+  },
+  {
+    id:10, type:"email", difficulty:"normal", title:"L'email più ovvia di sempre",
+    sender:"tirubiamoisoldi@gmail.com", senderName:"Principe Mohammed Alkhazar",
+    subject:"EREDITÀ DI €4.500.000 — URGENTE",
+    body:"Caro amico prezioso,\n\nSono il Principe Mohammed Alkhazar del Marocco.\n\nHo eredità di €4.500.000 che devo trasferire fuori dal paese in SEGRETO per motivi politici molto complicati.\n\nHo bisogno di persona fidata come te per ricevere i soldi. Ti darò il 30% = €1.350.000!!!\n\nDevi solo mandare:\n• Copia passaporto\n• Numero conto corrente\n• Anticipo spese bancarie: €500\n\nRisposta URGENTE richiesta!\n\nPrincipe Mohammed",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Il Principe Alkhazar è commosso dalla tua fiducia. I tuoi €500 andranno in buone mani: le sue.",explanation:"La 'truffa del principe nigeriano' esiste da decenni ed è ancora attiva perché funziona su chi non la conosce. Il mittente Gmail, la richiesta di anticipo, la promessa di milioni: tutti segnali inequivocabili."},
+      report:{points:10,irony:"Perfetto. Anche il principe ha capito.",explanation:"Segnalare queste email è utile perché aiuta i filtri antispam a migliorare. Nonostante sembrino ovvie, queste truffe colpiscono ancora migliaia di persone ogni anno."},
+      delete:{points:5,irony:"Saggio. L'eredità resterà al principe.",explanation:"Eliminare è corretto, ma il mittente 'tirubiamoisoldi@gmail.com' avrebbe dovuto essere sufficiente come campanello d'allarme immediato."}
+    }
+  },
+  {
+    id:11, type:"whatsapp", difficulty:"normal", title:"Catena WhatsApp",
+    sender:"+39 328 9876543", senderName:"Zia Carla 👵",
+    body:"Carissimo/a!\n\nDEVI ASSOLUTAMENTE CONDIVIDERE questo messaggio con 20 persone ENTRO OGGI!\n\n⚠️ WhatsApp diventerà A PAGAMENTO tra 24 ore!\n\n💸 Costerà €5,99 al mese!\n\nL'unico modo per mantenere WhatsApp GRATUITO è condividere questo messaggio con almeno 20 contatti. WhatsApp controlla chi condivide!\n\nHO GIÀ CONDIVISO E IL MIO ACCOUNT È AL SICURO ✅\n\nP.S. Fallo ora prima che sia troppo tardi! 🙏",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Hai appena inviato disinformazione a 20 persone. Zia Carla è orgogliosa.",explanation:"Condividere catene false è considerato GAME OVER perché diffonde disinformazione, crea panico inutile e potrebbe contenere link dannosi. WhatsApp non diventa mai a pagamento tramite catene."},
+      report:{points:5,irony:"Bene. Magari spiega anche alla zia come funziona.",explanation:"Segnalare catene false è utile, ma puoi anche gentilmente informare i tuoi contatti che si tratta di disinformazione — molti non lo sanno."},
+      delete:{points:10,irony:"Perfetto. E poi spiega alla zia che WhatsApp è gratuito per scelta di Meta.",explanation:"Eliminare senza condividere è la risposta corretta. Le catene WhatsApp sono sempre false: WhatsApp non diventa mai a pagamento tramite condivisione di messaggi."}
+    }
+  },
+  {
+    id:12, type:"email", difficulty:"normal", title:"Ordine Amazon sospetto",
+    sender:"ordini@amazon-supporto-clienti.org", senderName:"Amazon",
+    subject:"Il tuo ordine #AMZ-847291 è stato bloccato",
+    body:"Caro cliente Amazon,\n\nIl tuo ordine recente è stato bloccato per attività sospetta.\n\nOrdine: #AMZ-847291\nImporto: €347,99\nArticolo: iPhone 15 Pro Max\n\nSe non reconosci quest'ordine, devi verificare il tuo account IMMEDIATAMENTE per evitare l'addebito.\n\n[Clicca qui per contestare l'ordine]\n\nAmazon Servizio Clienti",
+    choices:{
+      click:{points:"GAMEOVER",irony:"L'ordine che non hai fatto è costato meno dei tuoi dati bancari.",explanation:"Errori ortografici ('reconosci'), dominio non ufficiale (amazon-supporto-clienti.org invece di amazon.it), ordine che non ricordi: tre segnali chiari. Amazon usa solo @amazon.it o @amazon.com."},
+      report:{points:10,irony:"Ottimo. Amazon reale ti ringrazierebbe.",explanation:"Segnalare tentativi di phishing che usano il brand Amazon aiuta sia Amazon sia altri utenti. Puoi segnalarli a stop-spoofing@amazon.com."},
+      delete:{points:5,irony:"Giusto. L'ordine non esiste comunque.",explanation:"Eliminare è corretto, ma in questo caso potevi segnalare aiutando altri utenti. Se hai un dubbio su ordini reali, accedi sempre direttamente all'app Amazon."}
+    }
+  },
+  {
+    id:13, type:"email", difficulty:"normal", title:"Recruiter sospetto",
+    sender:"recruiter.hr@jobs-premium-network.biz", senderName:"Laura Conti - HR Manager",
+    subject:"Offerta di lavoro esclusiva per il tuo profilo",
+    body:"Buongiorno,\n\nHo trovato il tuo profilo su LinkedIn e sono rimasta colpita dalla tua esperienza.\n\nStiamo cercando candidati per una posizione da casa con stipendio €3.500/mese + bonus.\n\nNessuna esperienza richiesta. Orario flessibile. Inizio immediato.\n\nPer procedere ho bisogno di:\n• CV aggiornato\n• Copia documento identità\n• Codice fiscale\n• IBAN per i pagamenti\n\n[Candidati subito — scadenza domani]\n\nLaura Conti\nHR Manager",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Hai appena inviato tutto il necessario per un furto di identità. Bel colloquio.",explanation:"Segnali di truffa: €3.500/mese senza esperienza, dominio .biz sospetto, richiesta immediata di IBAN e documento identità. Le aziende serie non chiedono mai l'IBAN prima di un colloquio."},
+      report:{points:10,irony:"Corretto. Laura non esiste, ma la segnalazione aiuta.",explanation:"Segnalare offerte di lavoro fraudolente è importante. Puoi farlo anche alla piattaforma dove hai trovato il contatto (LinkedIn, ecc.) e alla Polizia Postale."},
+      delete:{points:5,irony:"Saggio. €3.500 senza esperienza è un sogno.",explanation:"Eliminare è corretto. Regola: nessuna azienda seria chiede IBAN e documento identità prima ancora di un colloquio."}
+    }
+  },
+  {
+    id:14, type:"email", difficulty:"normal", title:"Verifica Google reale",
+    sender:"no-reply@accounts.google.com", senderName:"Google",
+    subject:"Verifica richiesta: nuovo accesso al tuo account",
+    body:"Nuovo accesso al tuo account Google\n\nAbbiamo rilevato un accesso al tuo account Google da un nuovo dispositivo.\n\nDispositivo: Chrome su Windows 11\nPosizione approssimativa: Milano, Italia\nData e ora: oggi alle 14:32\n\nSe sei stato tu, non devi fare nulla.\n\nSe NON eri tu:\n[Proteggi il tuo account]\n\nIl team di sicurezza Google",
+    choices:{
+      click:{points:10,irony:"Bene! Hai riconosciuto una comunicazione Google legittima.",explanation:"Il dominio @accounts.google.com è ufficiale. Google invia davvero queste notifiche di sicurezza. Il messaggio non chiede password, non crea panico esasperato, offre una scelta ('se eri tu, non fare nulla'). Questi sono segnali di legittimità."},
+      report:{points:0,irony:"Google ti manderà... un'altra email di verifica.",explanation:"Segnalare email Google legittime è controproducente. Impara a riconoscere i segnali di autenticità: dominio ufficiale, nessuna richiesta di credenziali, tono informativo non allarmistico."},
+      delete:{points:5,irony:"Prudente, ma se qualcuno ha davvero acceduto al tuo account, non lo saprai.",explanation:"Se sei dubbioso, non cliccare il link dell'email ma vai direttamente a myaccount.google.com per verificare l'attività."}
+    }
+  },
+  {
+    id:15, type:"email", difficulty:"normal", title:"Eredità dal Principe (inglese)",
+    sender:"prince.ali@royalfamily-dubai.co", senderName:"Prince Palmer",
+    subject:"CONFIDENTIAL — Inheritance Transfer $8,500,000 USD",
+    body:"STRICTLY CONFIDENTIAL\n\nDear Friend,\n\nI am Prince Cole Palmer, member of the Royal Family of Dubai.\n\nI have a fortune of $8,500,000 USD that I need to transfer outside the country urgently.\n\nI need a trusted foreign partner. You will receive 40% = $3,400,000 USD.\n\nThis is 100% legal and secure.\n\nTo begin the transfer I need:\n• Full name and address\n• Bank account details\n• Processing fee: $1,200 USD\n\nPlease respond URGENTLY and keep this CONFIDENTIAL.\n\nGod bless you,\nPrince Ali",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Il Principe ti ringrazia per il tuo contributo alla sua pensione.",explanation:"La variante inglese della truffa del principe è ancora più diffusa. 'Processing fee' = anticipo truffa. Nessun principe reale ha bisogno del tuo conto bancario trovato casualmente. Questa è la 'advance fee fraud' o '419 scam'."},
+      report:{points:10,irony:"Saggio. I milioni resteranno nel Qatar immaginario.",explanation:"Segnalare immediatamente è la risposta corretta. Questa email merita una segnalazione approfondita: è spam classico a cui filtri dovrebbero lavorare"},
+      delete:{points:10,irony:"Utile per i filtri antispam.",explanation:"Eliminare è già sufficiente per questa truffa così evidente."}
+    }
+  },
+  {
+    id:16, type:"email", difficulty:"hard", title:"Link aziendale accorciato",
+    sender:"comunicazioni@tuaazienda.it", senderName:"Ufficio Marketing",
+    subject:"Materiali per la riunione di domani",
+    body:"Ciao team,\n\nIn allegato e nel link qui sotto trovate i materiali per la riunione di domani mattina.\n\n📎 Agenda_riunione_Q4.pdf (87KB)\n\n➡️ bit.ly/3xK9mPq — presentazione completa\n\nCi vediamo domani alle 9:00 in sala riunioni B.\n\nCordiali saluti,\nUfficio Marketing",
+    choices:{
+      click:{points:0,irony:"Potresti essere al sicuro... o no. I link abbreviati nascondono la destinazione.",explanation:"Non è GAME OVER perché l'email sembra legittima, ma aprire link abbreviati senza verificare è rischioso. I link abbreviati (bit.ly, tinyurl, ecc.) nascondono la destinazione reale. Prima di cliccare, usa un servizio come checkshorturl.com per vedere dove porta davvero."},
+      report:{points:10,irony:"Ottima prudenza. Meglio verificare con il mittente.",explanation:"La cosa più sicura è contattare direttamente il mittente (via telefono o Slack) per verificare se ha davvero inviato il link e dove porta. I link abbreviati in email aziendali sono un segnale da verificare sempre."},
+      delete:{points:5,irony:"Prudente. Digli che preferisci link diretti.",explanation:"Eliminare è sicuro. Potresti però chiedere al collega di mandarti il link completo o l'allegato in un modo verificabile."}
+    }
+  },
+  {
+    id:17, type:"sms", difficulty:"hard", title:"SMS della tua banca",
+    sender:"UniCredit", senderName:"UniCredit",
+    body:"UniCredit: Operazione sospetta di €892 rilevata sul tuo conto. Se non sei stato tu, blocca immediatamente: unicredit.it/blocca-carta\n\nCod. operazione: UC-2847192",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Sembrava vero, vero? Anche il nome mittente si falsifica.",explanation:"Questo è MOLTO insidioso: il nome mittente 'UniCredit' può essere falsificato (spoofing). L'urgenza di un addebito sospetto crea panico. Il link sembra legittimo ma non lo è. Regola: per problemi bancari, chiama sempre il numero sul retro della carta."},
+      report:{points:10,irony:"Perfetto. E poi chiama la banca dal numero ufficiale.",explanation:"Segnalare è utile, ma l'azione più importante è chiamare il numero ufficiale della tua banca (sul retro della carta) per verificare se c'è davvero un'operazione sospetta."},
+      delete:{points:5,irony:"Saggio, ma se l'operazione fosse reale?",explanation:"Eliminare è sicuro per non cadere nella truffa. Tuttavia, controlla poi direttamente l'app della tua banca o chiama il numero ufficiale per escludere operazioni fraudolente reali."}
+    }
+  },
+  {
+    id:18, type:"email", difficulty:"hard", title:"Notifica Apple ID inattesa",
+    sender:"no-reply@id.apple.com", senderName:"Apple",
+    subject:"Il tuo Apple ID è stato usato per accedere a iCloud",
+    body:"Il tuo Apple ID è stato usato per accedere a iCloud tramite un browser web.\n\nData e ora: oggi, 23:47\nPosizione: Mosca, Russia\nDispositivo: browser web\n\nSe sei stato tu, puoi ignorare questa email.\n\nSe NON eri tu, il tuo account potrebbe essere compromesso.\n[Rivedi l'attività dell'account]\n\nApple Support",
+    choices:{
+      delete:{points:10,irony:"Saggio. Vai direttamente su appleid.apple.com per verificare.",explanation:"Non cliccare mai link nelle email di notifica di sicurezza, anche se sembrano legittime. Vai SEMPRE direttamente al sito ufficiale digitandolo tu stesso. Apple invia queste notifiche, ma i phisher le copiano perfettamente."},
+      report:{points:0,irony:"Verifica l'accesso su appleid.apple.com.",explanation:"Segnalare è utile, ma non dimenticate di verificare l'accesso direttamente su appleid.apple.com per sicurezza."},
+      click:{points:0,irony:"Potresti essere al sicuro se era vera. Ma era una buona idea cliccare?",explanation:"Anche se questa email fosse autentica, la procedura corretta è mai cliccare link nelle email di sicurezza. Vai sempre direttamente al sito. Questa abitudine ti protegge anche quando l'email è falsa."}
+    }
+  },
+  {
+    id:19, type:"email", difficulty:"hard", title:"CEO Fraud — Gift Card",
+    sender:"m.ferrari@tuaazienda.it", senderName:"Marco Ferrari (CEO)",
+    subject:"Richiesta urgente e riservata",
+    body:"Ciao,\n\nSono in riunione e non posso chiamare. Ho bisogno di un favore urgente e riservato.\n\nDevo inviare un regalo ai nostri partner strategici prima di stasera. Ho bisogno che tu acquisti subito €500 in gift card Amazon (5x €100).\n\nGratta il codice sul retro e mandami le foto via email. Ti rimborserò domani mattina.\n\nÈ importante che questa operazione resti riservata per ora.\n\nGrazie mille,\nMarco",
+    choices:{
+      click:{points:"GAMEOVER",irony:"Il CEO è contento. Il problema è che non era il CEO.",explanation:"Questa è la 'CEO Fraud' o 'BEC' (Business Email Compromise). È una delle truffe più costose al mondo. Segnali: urgenza + riservatezza + gift card (le banche non le tracciano). Nessuna azienda legittima usa gift card per pagamenti."},
+      report:{points:10,irony:"Bravissimo. E avvisa il vero CEO che qualcuno si spaccia per lui.",explanation:"La CEO Fraud va segnalata sia internamente (IT security, HR) sia alla Polizia Postale. Queste truffe causano perdite milionarie alle aziende ogni anno."},
+      delete:{points:5,irony:"Bene, ma il CEO reale dovrebbe saperlo.",explanation:"Eliminare ti protegge, ma segnalare internamente è importante. Se qualcuno si spaccia per il CEO, l'azienda deve saperlo per proteggere altri dipendenti."}
+    }
+  },
+  {
+    id:20, type:"email", difficulty:"hard", title:"PayPal o paypaI?",
+    sender:"service@paypal.com", senderName:"PayPal",
+    subject:"Hai inviato un pagamento di €347,00 a TechStore Milano",
+    body:"Hai inviato un pagamento\n\nImporto: €347,00\nDestinatario: TechStore Milano\nData: oggi\nID transazione: 8G847291JK293847T\n\nSe NON hai autorizzato questo pagamento, clicca qui per aprire una disputa ENTRO 24 ORE.\n\n[Apri disputa e recupera i fondi]\n\nPayPal ti protegge sempre.\n\nIl Team PayPal",
+    choices:{
+      report:{points:10,irony:"Hai notato il dominio? 'paypaI.com' con la 'I' maiuscola. Impressionante.",explanation:"Questo scenario rappresenta un attacco di 'homograph' o 'typosquatting': il dominio sembra 'paypal.com' ma usa caratteri visivamente identici (I maiuscola invece di l minuscola). Quasi impossibile da distinguere. Segnalare è la mossa giusta."},
+      delete:{points:0,irony:"Verifica l'app PayPal reale per sicurezza.",explanation:"Eliminare è sicuro ma devi controllare sempre direttamente sull'app PayPal ufficiale se c'è stata davvero una transazione, senza cliccare nessun link email."},
+      click:{points:"GAMEOVER",irony:"paypaI.com con la 'I' maiuscola. Un pixel di differenza, tutti i tuoi soldi di differenza.",explanation:"Questo è uno degli attacchi più sofisticati: il dominio usa caratteri Unicode visivamente identici alle lettere standard. 'paypaI.com' (con la I maiuscola) sembra identico a 'paypal.com'. Per questo non bisogna mai cliccare link nelle email bancarie — vai sempre direttamente all'app."}
+    }
+  }
+];
+
+const EmailUI = ({data}) => (
+  <div style={{background:"#fff",borderRadius:"8px",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,0.15)",fontFamily:"Arial,sans-serif",fontSize:"14px"}}>
+    <div style={{background:"#EA4335",padding:"10px 16px",display:"flex",alignItems:"center",gap:"8px"}}>
+      <span style={{color:"white",fontSize:"18px",fontWeight:"bold"}}>M</span>
+      <span style={{color:"white",fontSize:"13px",opacity:0.9}}>Gmail</span>
     <h1>CYBER-DETECTIVE</h1>
     <div>
         <!-- Other content goes here -->
     </div>
+    <div style={{padding:"14px",borderBottom:"1px solid #e8eaed"}}>
+      <div style={{fontSize:"17px",fontWeight:"400",color:"#202124",marginBottom:"10px"}}>{data.subject}</div>
+      <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+        <div style={{width:"38px",height:"38px",borderRadius:"50%",background:"#1a73e8",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontWeight:"bold",fontSize:"15px",flexShrink:0}}>{data.senderName[0]}</div>
+        <div>
+          <div style={{fontWeight:"500",color:"#202124",fontSize:"14px"}}>{data.senderName}</div>
+          <div style={{color:"#5f6368",fontSize:"11px"}}>&lt;{data.sender}&gt;</div>
+        </div>
+      </div>
+    </div>
+    <div style={{padding:"14px 14px 18px",color:"#3c4043",lineHeight:"1.6",whiteSpace:"pre-line",fontSize:"13px"}}>{data.body}</div>
+  </div>
+);
+
+const SmsUI = ({data}) => (
+  <div style={{maxWidth:"300px",margin:"0 auto",background:"#1c1c1e",borderRadius:"32px",padding:"14px 8px",boxShadow:"0 8px 32px rgba(0,0,0,0.4)"}}>
+    <div style={{background:"#2c2c2e",borderRadius:"26px",overflow:"hidden",paddingBottom:"14px"}}>
+      <div style={{textAlign:"center",padding:"10px",color:"#fff",fontSize:"13px",fontWeight:"600",borderBottom:"1px solid #3a3a3c"}}>{data.senderName}</div>
+      <div style={{padding:"12px",display:"flex",flexDirection:"column",gap:"8px"}}>
+        <div style={{background:"#3a3a3c",color:"#ebebf5",padding:"10px 12px",borderRadius:"16px 16px 16px 4px",maxWidth:"88%",fontSize:"13px",lineHeight:"1.5"}}>{data.body}</div>
+        <div style={{color:"#8e8e93",fontSize:"11px",paddingLeft:"4px"}}>Adesso</div>
+      </div>
+    </div>
+  </div>
+);
+
+const WhatsappUI = ({data}) => (
+  <div style={{background:"#0b1014",borderRadius:"12px",overflow:"hidden",maxWidth:"340px",margin:"0 auto",boxShadow:"0 4px 20px rgba(0,0,0,0.3)"}}>
+    <div style={{background:"#1f2c34",padding:"10px 14px",display:"flex",alignItems:"center",gap:"10px"}}>
+      <div style={{width:"38px",height:"38px",borderRadius:"50%",background:"#00a884",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:"16px",flexShrink:0}}>👤</div>
+      <div>
+        <div style={{color:"#e9edef",fontWeight:"600",fontSize:"14px"}}>{data.senderName}</div>
+        <div style={{color:"#8696a0",fontSize:"12px"}}>online</div>
+      </div>
+    </div>
+    <div style={{background:"#0b1014",padding:"14px",minHeight:"140px",display:"flex",flexDirection:"column",gap:"8px",justifyContent:"flex-end"}}>
+      <div style={{background:"#202c33",color:"#e9edef",padding:"8px 12px 6px",borderRadius:"4px 12px 12px 12px",maxWidth:"88%",fontSize:"13px",lineHeight:"1.5"}}>
+        {data.body}
+        <div style={{color:"#8696a0",fontSize:"11px",textAlign:"right",marginTop:"4px"}}>23:47 ✓✓</div>
+      </div>
+    </div>
+  </div>
+);
+
+const InstagramUI = ({data}) => (
+  <div style={{background:"#000",borderRadius:"12px",overflow:"hidden",maxWidth:"340px",margin:"0 auto",boxShadow:"0 4px 20px rgba(0,0,0,0.5)"}}>
+    <div style={{background:"#121212",padding:"10px 14px",display:"flex",alignItems:"center",gap:"10px",borderBottom:"1px solid #262626"}}>
+      <div style={{width:"34px",height:"34px",borderRadius:"50%",background:"linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)",display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:"14px",flexShrink:0}}>{data.senderName[0]}</div>
+      <div>
+        <div style={{color:"#fafafa",fontWeight:"600",fontSize:"13px"}}>{data.sender}</div>
+        <div style={{color:"#8e8e8e",fontSize:"11px"}}>Messaggi diretti</div>
+      </div>
+    </div>
+    <div style={{padding:"14px",background:"#000",minHeight:"130px",display:"flex",flexDirection:"column",justifyContent:"center",gap:"8px"}}>
+      <div style={{background:"#262626",color:"#fafafa",padding:"10px 12px",borderRadius:"16px 16px 4px 16px",maxWidth:"88%",fontSize:"13px",lineHeight:"1.5"}}>{data.body}</div>
+      <div style={{color:"#8e8e8e",fontSize:"11px",paddingLeft:"4px"}}>Visto</div>
+    </div>
+  </div>
+);
+
+const PopupUI = ({data}) => (
+  <div style={{background:"#1e1e2e",borderRadius:"12px",overflow:"hidden",maxWidth:"380px",margin:"0 auto",boxShadow:"0 4px 20px rgba(0,0,0,0.4)"}}>
+    <div style={{background:"#2d2d3d",padding:"8px 12px",display:"flex",gap:"6px",alignItems:"center"}}>
+      <div style={{width:"11px",height:"11px",borderRadius:"50%",background:"#ff5f57"}}/>
+      <div style={{width:"11px",height:"11px",borderRadius:"50%",background:"#febc2e"}}/>
+      <div style={{width:"11px",height:"11px",borderRadius:"50%",background:"#28c840"}}/>
+      <span style={{color:"#8888aa",fontSize:"11px",marginLeft:"8px"}}>secure-alerts.popup.xyz</span>
+    </div>
+    <div style={{padding:"20px",textAlign:"center",background:"#fff"}}>
+      <div style={{fontSize:"36px",marginBottom:"10px"}}>⚠️</div>
+      <div style={{color:"#d32f2f",fontWeight:"bold",fontSize:"15px",marginBottom:"8px"}}>ATTENZIONE CRITICA!</div>
+      <div style={{color:"#333",fontSize:"12px",whiteSpace:"pre-line",lineHeight:"1.6"}}>{data.body}</div>
+      <div style={{marginTop:"12px",padding:"8px 18px",background:"#d32f2f",color:"white",borderRadius:"4px",display:"inline-block",fontWeight:"bold",fontSize:"12px"}}>PROTEGGI ORA →</div>
+    </div>
+  </div>
+);
+
+const renderScenario = (s) => {
+  if(s.type==="sms") return React.createElement(SmsUI,{data:s});
+  if(s.type==="whatsapp") return React.createElement(WhatsappUI,{data:s});
+  if(s.type==="instagram") return React.createElement(InstagramUI,{data:s});
+  if(s.type==="popup") return React.createElement(PopupUI,{data:s});
+  return React.createElement(EmailUI,{data:s});
+};
+
+function App() {
+  const [screen, setScreen] = useState("intro");
+  const [currentQ, setCurrentQ] = useState(0);
+  const [score, setScore] = useState(0);
+  const [lastChoice, setLastChoice] = useState(null);
+  const [gameOverData, setGameOverData] = useState(null);
+  const [shownHard, setShownHard] = useState(false);
+
+  const scenario = scenarios[currentQ];
+  const maxScore = scenarios.length * 10;
+
+  const handleChoice = (key) => {
+    const choice = scenario.choices[key];
+    if(!choice) return;
+    if(choice.points === "GAMEOVER") { setGameOverData({...choice}); setScreen("gameover"); }
+    else { setScore(s => s + choice.points); setLastChoice({...choice, key}); setScreen("feedback"); }
+  };
+
+  const next = () => {
+    const n = currentQ + 1;
+    if(n >= scenarios.length) { setScreen("results"); return; }
+    if(n === 15 && !shownHard) { setShownHard(true); setCurrentQ(n); setScreen("hard_warning"); }
+    else { setCurrentQ(n); setScreen("game"); }
+  };
+
+  const restart = () => { setScreen("intro"); setCurrentQ(0); setScore(0); setLastChoice(null); setGameOverData(null); setShownHard(false); };
+
+  const B = {minHeight:"100vh",background:"linear-gradient(135deg,#0a0a1a 0%,#0d1b2a 50%,#0a1628 100%)",fontFamily:"'Courier New',Consolas,monospace",color:"#e8f4fd",padding:"0"};
+  const C = {background:"rgba(255,255,255,0.04)",border:"1px solid rgba(100,180,255,0.15)",borderRadius:"14px",padding:"20px",backdropFilter:"blur(10px)"};
+  const btn = (bg,extra={}) => ({border:"none",padding:"13px 22px",borderRadius:"8px",fontSize:"14px",fontFamily:"'Courier New',monospace",fontWeight:"bold",cursor:"pointer",letterSpacing:"0.5px",background:bg,color:"white",...extra});
+
+  if(screen==="intro") return (
+    <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+      <div style={{maxWidth:"500px",width:"100%",textAlign:"center"}}>
+        <div style={{fontSize:"56px",marginBottom:"10px"}}>🛡️</div>
+        <div style={{fontSize:"10px",letterSpacing:"4px",color:"#64b4ff",marginBottom:"8px"}}>MISSIONE SICUREZZA DIGITALE</div>
+        <h1 style={{fontSize:"26px",margin:"0 0 18px",color:"#fff",fontWeight:"900",lineHeight:"1.2"}}>CYBER-DETECTIVE</div>
+        <div style={{...C,textAlign:"left",marginBottom:"22px"}}>
+          <p style={{margin:"0 0 10px",lineHeight:"1.7",color:"#64b4ff",fontWeight:"bold",fontSize:"14px"}}>Benvenuto Agente Digitale.</p>
+          <p style={{margin:"0 0 10px",lineHeight:"1.7",color:"#b0d4f0",fontSize:"13px"}}>Ogni giorno hacker e truffatori cercano di convincere le persone a cliccare link, condividere password o effettuare pagamenti falsi.</p>
+          <p style={{margin:"0 0 10px",lineHeight:"1.7",color:"#b0d4f0",fontSize:"13px"}}>In questo gioco dovrai prendere decisioni rapide davanti a email, SMS, messaggi social e notifiche realistiche.</p>
+          <p style={{margin:"0",lineHeight:"1.7",color:"#ffd700",fontSize:"13px",fontWeight:"bold"}}>⚠️ Non tutte le scelte sbagliate sono fatali… ma alcune lo sono.</p>
+        </div>
+        <div style={{display:"flex",gap:"8px",justifyContent:"center",marginBottom:"20px",flexWrap:"wrap"}}>
+          {[["🎯","20 scenari"],["⚡","Feedback immediato"],["💀","Game Over reali"]].map(([icon,title])=>(
+            <div key={title} style={{...C,padding:"12px 16px",textAlign:"center",flex:"1",minWidth:"110px"}}>
+              <div style={{fontSize:"20px"}}>{icon}</div>
+              <div style={{fontSize:"11px",fontWeight:"bold",color:"#64b4ff",marginTop:"4px"}}>{title}</div>
+            </div>
+          ))}
+        </div>
+        <button style={btn("#00c896",{fontSize:"15px",padding:"15px 36px"})} onClick={()=>setScreen("game")}>▶ INIZIA LA MISSIONE</button>
+      </div>
+    </div>
+  );
+
+  if(screen==="hard_warning") return (
+    <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+      <div style={{maxWidth:"460px",width:"100%",textAlign:"center"}}>
+        <div style={{fontSize:"56px",marginBottom:"10px"}}>⚠️</div>
+        <h2 style={{color:"#ff6b35",fontSize:"24px",margin:"0 0 18px",letterSpacing:"2px"}}>LIVELLO DIFFICILE</h2>
+        <div style={{...C,background:"rgba(255,107,53,0.1)",border:"1px solid rgba(255,107,53,0.3)",marginBottom:"22px",textAlign:"left"}}>
+          <p style={{margin:"0 0 10px",color:"#ffb347",fontSize:"14px",fontWeight:"bold"}}>Le prossime 5 situazioni sono MOLTO DIFFICILI.</p>
+          <p style={{margin:"0",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.6"}}>Anche esperti di sicurezza informatica commettono errori in questi scenari. Truffatori sofisticati usano tecniche avanzate che imitano quasi perfettamente comunicazioni legittime.</p>
+        </div>
+        <div style={{fontSize:"38px",fontWeight:"900",color:"#ffd700",marginBottom:"4px"}}>{score} / {maxScore}</div>
+        <div style={{color:"#8ab4cc",fontSize:"13px",marginBottom:"22px"}}>punteggio attuale</div>
+        <button style={btn("#ff6b35")} onClick={()=>setScreen("game")}>AFFRONTA IL LIVELLO DIFFICILE →</button>
+      </div>
+    </div>
+  );
+
+  if(screen==="game" && scenario) {
+    const aLabel = {click:"🖱️  Clicca e accetta", report:"🚩  Segnala come truffa", delete:"🗑️  Elimina e blocca definitivamente"};
+    const aColor = {click:"rgba(26,115,232,0.15)", report:"rgba(232,168,0,0.15)", delete:"rgba(95,99,104,0.15)"};
+    const aBorder = {click:"rgba(26,115,232,0.4)", report:"rgba(232,168,0,0.4)", delete:"rgba(95,99,104,0.4)"};
+    const aText = {click:"#7ab3ff", report:"#ffd700", delete:"#adb5bd"};
+    return (
+      <div style={{...B,padding:"12px"}}>
+        <div style={{maxWidth:"600px",margin:"0 auto"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"10px"}}>
+            <div style={{fontSize:"10px",color:"#64b4ff",letterSpacing:"2px"}}>SCENARIO {currentQ+1} / {scenarios.length}</div>
+            <div style={{background:"rgba(100,180,255,0.1)",border:"1px solid rgba(100,180,255,0.3)",borderRadius:"20px",padding:"5px 12px",fontSize:"13px",fontWeight:"bold",color:"#ffd700"}}>⭐ {score} pt</div>
+          </div>
+          <div style={{height:"4px",background:"rgba(255,255,255,0.1)",borderRadius:"2px",marginBottom:"14px"}}>
+            <div style={{height:"100%",background:"linear-gradient(90deg,#64b4ff,#00c896)",borderRadius:"2px",width:`${((currentQ+1)/scenarios.length)*100}%`,transition:"width 0.3s"}}/>
+          </div>
+          {scenario.difficulty==="hard" && <div style={{textAlign:"center",marginBottom:"8px"}}><span style={{background:"rgba(255,107,53,0.2)",border:"1px solid rgba(255,107,53,0.4)",color:"#ff6b35",fontSize:"10px",padding:"3px 10px",borderRadius:"20px",letterSpacing:"2px"}}>🔥 LIVELLO DIFFICILE</span></div>}
+          <h2 style={{textAlign:"center",margin:"0 0 12px",color:"#fff",fontSize:"15px",fontWeight:"700"}}>{scenario.title}</h2>
+          <div style={{marginBottom:"18px"}}>{renderScenario(scenario)}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+            {["click","report","delete"].map(key=>(
+              <button key={key} style={{border:`1px solid ${aBorder[key]}`,padding:"12px 16px",borderRadius:"8px",fontSize:"13px",fontFamily:"'Courier New',monospace",fontWeight:"bold",cursor:"pointer",background:aColor[key],color:aText[key],display:"flex",alignItems:"center",gap:"8px",textAlign:"left",width:"100%"}} onClick={()=>handleChoice(key)}>
+                {aLabel[key]}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if(screen==="feedback" && lastChoice) {
+    const ip = lastChoice.points===10, ig = lastChoice.points===5;
+    const col = ip?"#00c896":ig?"#ffd700":"#ff6b35";
+    const ico = ip?"✅":ig?"⚠️":"❌";
+    return (
+      <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+        <div style={{maxWidth:"500px",width:"100%"}}>
+          <div style={{textAlign:"center",marginBottom:"18px"}}>
+            <div style={{fontSize:"48px"}}>{ico}</div>
+            <div style={{fontSize:"34px",fontWeight:"900",color:col,margin:"6px 0"}}>+{lastChoice.points} punti</div>
+            <div style={{color:"#8ab4cc",fontSize:"13px"}}>Totale: {score} / {maxScore}</div>
+          </div>
+          <div style={{...C,marginBottom:"14px",border:`1px solid rgba(${ip?"0,200,150":ig?"255,215,0":"255,107,53"},0.3)`}}>
+            <div style={{fontSize:"11px",color:col,fontWeight:"bold",marginBottom:"8px",letterSpacing:"1px"}}>💡 SPIEGAZIONE</div>
+            <p style={{margin:"0 0 12px",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.7"}}>{lastChoice.explanation}</p>
+            <div style={{borderTop:"1px solid rgba(255,255,255,0.1)",paddingTop:"10px",color:"#8ab4cc",fontSize:"12px",fontStyle:"italic"}}>🎭 {lastChoice.irony}</div>
+          </div>
+          <button style={btn("#00c896",{width:"100%",textAlign:"center"})} onClick={next}>
+            {currentQ+1>=scenarios.length?"VEDI RISULTATI FINALI →":"PROSSIMO SCENARIO →"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if(screen==="gameover" && gameOverData) return (
+    <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+      <div style={{maxWidth:"460px",width:"100%",textAlign:"center"}}>
+        <div style={{fontSize:"68px",marginBottom:"6px"}}>💀</div>
+        <h2 style={{color:"#ff4444",fontSize:"38px",margin:"0 0 4px",letterSpacing:"4px",fontWeight:"900"}}>GAME OVER</h2>
+        <div style={{color:"#ff6b6b",fontSize:"11px",letterSpacing:"2px",marginBottom:"22px"}}>LA MISSIONE È FALLITA</div>
+        <div style={{...C,background:"rgba(255,68,68,0.08)",border:"1px solid rgba(255,68,68,0.25)",marginBottom:"16px",textAlign:"left"}}>
+          <div style={{fontSize:"11px",color:"#ff6b6b",fontWeight:"bold",marginBottom:"8px",letterSpacing:"1px"}}>🎭 COSA È SUCCESSO</div>
+          <p style={{margin:"0 0 12px",color:"#ffaaaa",fontSize:"13px",fontStyle:"italic",lineHeight:"1.6"}}>"{gameOverData.irony}"</p>
+          <div style={{borderTop:"1px solid rgba(255,68,68,0.2)",paddingTop:"10px"}}>
+            <div style={{fontSize:"11px",color:"#ff6b6b",fontWeight:"bold",marginBottom:"6px",letterSpacing:"1px"}}>📚 LEZIONE IMPARATA</div>
+            <p style={{margin:"0",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.7"}}>{gameOverData.explanation}</p>
+          </div>
+        </div>
+        <div style={{marginBottom:"6px",color:"#8ab4cc",fontSize:"13px"}}>Punteggio prima del game over: <strong style={{color:"#ffd700"}}>{score}</strong></div>
+        <button style={btn("#ff4444",{marginTop:"14px"})} onClick={restart}>🔄 RIPROVA DALL'INIZIO</button>
+      </div>
+    </div>
+  );
+
+  if(screen==="results") {
+    const pct = (score/maxScore)*100;
+    let rank,rCol,rIcon,rDesc;
+    if(score<=80){rank="Internet ti ha quasi sconfitto";rCol="#ff6b35";rIcon="😰";rDesc="Serve allenamento. Molte delle tecniche usate dai truffatori ti hanno ingannato. Riprova e ricorda: verifica sempre il dominio, mai cliccare link sotto pressione.";}
+    else if(score<=150){rank="Buona attenzione digitale";rCol="#ffd700";rIcon="👍";rDesc="Stai sviluppando buone abitudini di sicurezza. Hai riconosciuto molte truffe, ma alcune tecniche avanzate ti hanno ancora ingannato. Continua ad allenarti.";}
+    else{rank="Sei il capo Anti-Phishing certificato";rCol="#00c896";rIcon="🏆";rDesc="Eccellente! Hai dimostrato una solida comprensione delle tecniche di phishing. Ricorda di applicare queste conoscenze ogni giorno online.";}
+    return (
+      <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+        <div style={{maxWidth:"500px",width:"100%",textAlign:"center"}}>
+          <div style={{fontSize:"60px",marginBottom:"8px"}}>{rIcon}</div>
+          <div style={{fontSize:"10px",letterSpacing:"3px",color:"#64b4ff",marginBottom:"8px"}}>RISULTATO FINALE</div>
+          <h2 style={{color:rCol,fontSize:"19px",margin:"0 0 18px",fontWeight:"900",lineHeight:"1.3"}}>{rank}</h2>
+          <div style={{...C,marginBottom:"16px"}}>
+            <div style={{fontSize:"52px",fontWeight:"900",color:rCol}}>{score}</div>
+            <div style={{color:"#8ab4cc",fontSize:"13px",marginBottom:"12px"}}>su {maxScore} punti possibili</div>
+            <div style={{height:"10px",background:"rgba(255,255,255,0.1)",borderRadius:"5px",overflow:"hidden"}}>
+              <div style={{height:"100%",background:`linear-gradient(90deg,${rCol},${rCol}88)`,borderRadius:"5px",width:`${pct}%`}}/>
+            </div>
+            <div style={{color:"#64b4ff",fontSize:"12px",marginTop:"6px"}}>{Math.round(pct)}% delle risposte corrette</div>
+          </div>
+          <div style={{...C,textAlign:"left",marginBottom:"14px"}}><p style={{margin:"0",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.7"}}>{rDesc}</p></div>
+          <div style={{...C,textAlign:"left",marginBottom:"20px"}}>
+            <div style={{fontSize:"10px",color:"#64b4ff",fontWeight:"bold",letterSpacing:"2px",marginBottom:"10px"}}>📋 REGOLE D'ORO</div>
+            {["Controlla sempre il dominio del mittente, non il nome visualizzato","Le banche non chiedono mai credenziali complete via email","L'urgenza artificiale è sempre un segnale d'allarme","Non aprire allegati .zip non richiesti","Per conferme bancarie, usa sempre l'app ufficiale"].map((r,i)=>(
+              <div key={i} style={{display:"flex",gap:"8px",marginBottom:"6px",fontSize:"12px",color:"#b0d4f0",lineHeight:"1.5"}}>
+                <span style={{color:"#00c896",flexShrink:0}}>✓</span>{r}
+              </div>
+            ))}
+          </div>
+          <button style={btn("#00c896")} onClick={restart}>🔄 GIOCA ANCORA</button>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
 </body>
+</html>
 </html>
