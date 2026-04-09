@@ -366,8 +366,8 @@ function App() {
     <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
       <div style={{maxWidth:"500px",width:"100%",textAlign:"center"}}>
         <div style={{fontSize:"56px",marginBottom:"10px"}}>🛡️</div>
-        <div style={{fontSize:"10px",letterSpacing:"4px",color:"#64b4ff",marginBottom:"8px"}}>MISSIONE SICUREZZA DIGITALE</div>
-        <h1 style={{fontSize:"26px",margin:"0 0 18px",color:"#fff",fontWeight:"900",lineHeight:"1.2"}}>ANTI-PHISHING<br/><span style={{color:"#64b4ff"}}>TRAINING</span></h1>
+        <div style={{fontSize:"10px",letterSpacing:"4px",color:"#64b4ff",marginBottom:"8px"}}>MISSIONE DI SICUREZZA DIGITALE</div>
+        <h1 style={{fontSize:"26px",margin:"0 0 18px",color:"#fff",fontWeight:"900",lineHeight:"1.2"}}>CYBER DETECTIVE</h1>
         <div style={{...C,textAlign:"left",marginBottom:"22px"}}>
           <p style={{margin:"0 0 10px",lineHeight:"1.7",color:"#64b4ff",fontWeight:"bold",fontSize:"14px"}}>Benvenuto Agente Digitale.</p>
           <p style={{margin:"0 0 10px",lineHeight:"1.7",color:"#b0d4f0",fontSize:"13px"}}>Ogni giorno hacker e truffatori cercano di convincere le persone a cliccare link, condividere password o effettuare pagamenti falsi.</p>
@@ -394,11 +394,11 @@ function App() {
         <h2 style={{color:"#ff6b35",fontSize:"24px",margin:"0 0 18px",letterSpacing:"2px"}}>LIVELLO DIFFICILE</h2>
         <div style={{...C,background:"rgba(255,107,53,0.1)",border:"1px solid rgba(255,107,53,0.3)",marginBottom:"22px",textAlign:"left"}}>
           <p style={{margin:"0 0 10px",color:"#ffb347",fontSize:"14px",fontWeight:"bold"}}>Le prossime 5 situazioni sono MOLTO DIFFICILI.</p>
-          <p style={{margin:"0",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.6"}}>Anche esperti di sicurezza informatica commettono errori in questi scenari. Truffatori sofisticati usano tecniche avanzate che imitano quasi perfettamente comunicazioni legittime.</p>
+          <p style={{margin:"0",color:"#b0d4f0",fontSize:"13px",lineHeight:"1.6"}}>Anche esperti di sicurezza informatica commettono errori in questi scenari. Truffatori sofisticati usano tecniche avanzate che imitano quasi perfettamente comunicazioni legittime. Trovali tutti e vinci la sfida!!!</p>
         </div>
         <div style={{fontSize:"38px",fontWeight:"900",color:"#ffd700",marginBottom:"4px"}}>{score} / {maxScore}</div>
         <div style={{color:"#8ab4cc",fontSize:"13px",marginBottom:"22px"}}>punteggio attuale</div>
-        <button style={btn("#ff6b35")} onClick={()=>setScreen("game")}>AFFRONTA IL LIVELLO DIFFICILE →</button>
+        <button style={btn("#ff6b35")} onClick={()=>setScreen("game")}>AFFRONTA I LIVELLI DIFFICILI →</button>
       </div>
     </div>
   );
@@ -481,9 +481,9 @@ function App() {
   if(screen==="results") {
     const pct = (score/maxScore)*100;
     let rank,rCol,rIcon,rDesc;
-    if(score<=80){rank="Internet ti ha quasi sconfitto";rCol="#ff6b35";rIcon="😰";rDesc="Serve allenamento. Molte delle tecniche usate dai truffatori ti hanno ingannato. Riprova e ricorda: verifica sempre il dominio, mai cliccare link sotto pressione.";}
-    else if(score<=150){rank="Buona attenzione digitale";rCol="#ffd700";rIcon="👍";rDesc="Stai sviluppando buone abitudini di sicurezza. Hai riconosciuto molte truffe, ma alcune tecniche avanzate ti hanno ancora ingannato. Continua ad allenarti.";}
-    else{rank="Agente Anti-Phishing certificato";rCol="#00c896";rIcon="🏆";rDesc="Eccellente! Hai dimostrato una solida comprensione delle tecniche di phishing. Ricorda di applicare queste conoscenze ogni giorno online.";}
+    if(score<=80){rank="Internet ti ha quasi sconfitto";rCol="#ff6b35";rIcon="😰";rDesc="Serve allenamento. Molte delle tecniche usate dai truffatori ti hanno ingannato. Riprova e ricorda: verifica sempre tutto quello che puoi, mai cliccare link sotto pressione.";}
+    else if(score<=150){rank="Buona attenzione digitale";rCol="#ffd700";rIcon="👍";rDesc="Stai sviluppando buone abitudini di sicurezza. Hai riconosciuto molte truffe, ma alcune tecniche avanzate ti hanno ingannato. Continua ad allenarti per sopravvire nel tosto e difficile mondo digitale.";}
+    else{rank="Complimenti! Sei il capo Anti-Phishing certificato";rCol="#00c896";rIcon="🏆";rDesc="Hai dimostrato una solida comprensione delle tecniche di phishinge hai completato la missione! Ricorda di applicare queste conoscenze ogni giorno online.";}
     return (
       <div style={{...B,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
         <div style={{maxWidth:"500px",width:"100%",textAlign:"center"}}>
