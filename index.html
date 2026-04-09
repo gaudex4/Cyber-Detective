@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anti-Phishing Training 🛡️</title>
+  <title>Cyber Detective🛡️</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -72,17 +72,17 @@ const scenarios = [
     choices:{
       click:{points:0,irony:"Potresti aver consegnato i dati della tua carta. Guarda il dominio mittente.",explanation:"Non è GAME OVER solo perché potresti aver notato qualcosa di strano. Ma 'netflix-billing.support' NON è netflix.com. Il logo realistico distrae dall'unica cosa che conta: il dominio del mittente."},
       report:{points:10,irony:"Occhio di falco sul dominio. Rispetto.",explanation:"Hai identificato il segnale più importante: il dominio del mittente. Netflix usa sempre @netflix.com. Qualsiasi altro dominio, per quanto simile, è sospetto."},
-      delete:{points:5,irony:"Bene fatto. Se Netflix ha davvero un problema, ti avvisa nell'app.",explanation:"Eliminare era la scelta saggia. Controlla sempre direttamente l'app o il sito ufficiale per problemi con abbonamenti, mai tramite link email."}
+      delete:{points:5,irony:"Ben fatto. Se Netflix ha davvero un problema, ti avvisa nell'app.",explanation:"Eliminare è una scelta prudente. Controlla sempre direttamente l'app o il sito ufficiale per problemi con abbonamenti, mai tramite link email."}
     }
   },
   {
     id:6, type:"instagram", difficulty:"normal", title:"Richiesta urgente di un amico",
-    sender:"giada_bianchi_real", senderName:"Giada Bianchi",
-    body:"Ciao!! Sono in un guaio enorme 😭\n\nSono rimasta senza soldi a Madrid, mi hanno rubato il portafoglio e il telefono si sta scaricando.\n\nPuoi farmi un bonifico di 200€? Te li rendo subito lunedì promesso 🙏🙏\n\nEcco il mio IBAN: IT60 X054 2811 1010 0000 0123 456\n\nSto piangendo, ho bisogno di aiuto",
+    sender:"nerigiorgi_", senderName:"Neri Giorgi",
+    body:"Ciao!! Sono in un guaio enorme 😭\n\nSono rimasto senza soldi a Madrid, mi hanno rubato il portafoglio e il telefono si sta scaricando.\n\nPuoi farmi un bonifico di 200€? Te li rendo subito lunedì promesso 🙏🙏\n\nEcco il mio IBAN: IT60 X054 2811 1010 0000 0123 456\n\nSto piangendo, ho bisogno di aiuto",
     choices:{
-      click:{points:"GAMEOVER",irony:"200€ per scoprire che Giada era tranquilla a casa sua. La truffa del 'sono bloccato' è classica.",explanation:"Questa è la 'truffa dell'amico bloccato'. L'account di Giada è stato probabilmente rubato. Prima di qualsiasi pagamento, chiama sempre direttamente la persona per verificare."},
-      report:{points:5,irony:"Bene. Avvisa anche Giada che il suo account è compromesso.",explanation:"Segnalare l'account è utile, ma la cosa più importante è contattare Giada tramite altri canali (telefono, WhatsApp) per avvisarla che il suo Instagram è stato violato."},
-      delete:{points:10,irony:"Saggio. E poi chiama Giada per davvero — sull'account rubato, non sul bonifico.",explanation:"Non rispondere e non inviare denaro è la scelta giusta. Contatta sempre la persona tramite un canale diverso (chiamata diretta) per verificare."}
+      click:{points:"GAMEOVER",irony:"200€ per scoprire che Neri era tranquillo a casa sua. La truffa del 'sono bloccato' è classica.",explanation:"Questa è la 'truffa dell'amico bloccato'. L'account di Neri è stato probabilmente rubato. Prima di qualsiasi pagamento, chiama sempre direttamente la persona per verificare."},
+      report:{points:0,irony:"Esagerato! Non è game over ma ci sei andato vicino",explanation:"Segnalare l'account è poco utile,dato che la cosa più importante è contattare Giada tramite altri canali (telefono, WhatsApp) per avvisarla che il suo Instagram è stato violato."},
+      delete:{points:10,irony:"Saggio. E poi chiama Neri per davvero — sull'account rubato, non sul bonifico.",explanation:"Non rispondere e non inviare denaro è la scelta giusta. Contatta sempre la persona tramite un canale diverso (chiamata diretta) per verificare."}
     }
   },
   {
@@ -103,7 +103,7 @@ const scenarios = [
     body:"🔴 ATTENZIONE CRITICA!\n\nIl tuo dispositivo ha rilevato 12 VIRUS PERICOLOSI!\n\n⚠️ I tuoi dati personali sono a RISCHIO IMMEDIATO\n⚠️ Le tue password potrebbero essere state rubate\n⚠️ La tua webcam potrebbe essere compromessa\n\nDevi agire ORA per proteggere il tuo dispositivo!\n\n✅ RIMUOVI I VIRUS SUBITO\n\n[Clicca qui per la rimozione immediata]\n\nSe chiudi questa finestra perderai TUTTI i tuoi file.",
     choices:{
       click:{points:"GAMEOVER",irony:"Ironia della sorte: cliccando, hai installato esattamente il virus che non avevi.",explanation:"I siti web NON possono rilevare virus sul tuo dispositivo. Questo è un classico 'scareware': ti spaventa per farti scaricare un falso antivirus che è in realtà un malware. Chiudi sempre queste finestre tramite il gestore attività, senza cliccare nulla."},
-      report:{points:5,irony:"Bene, ma il popup è già sparito.",explanation:"Segnalare il sito al browser (c'è sempre un'opzione 'Segnala sito pericoloso') è utile per proteggere altri utenti."},
+      report:{points:5,irony:"Bene, ma il popup è già sparito...",explanation:"Segnalare il sito al browser (c'è sempre un'opzione 'Segnala sito pericoloso') è utile per proteggere altri utenti ma non è sempre la miglior mossa"},
       delete:{points:10,irony:"Saggio. Chiudi tutto e vai avanti.",explanation:"La risposta corretta allo scareware è chiudere il browser (o il tab) immediatamente senza cliccare nulla nella finestra di popup. Se necessario, usa Ctrl+Alt+Canc per forzare la chiusura."}
     }
   },
@@ -115,18 +115,18 @@ const scenarios = [
     choices:{
       click:{points:10,irony:"Corretto! Le policy IT esistono per una ragione.",explanation:"Questa email ha tutti i segnali di una comunicazione IT legittima: dominio aziendale coerente, procedura standard, link al dominio aziendale, contatto verificabile. Seguire le policy di sicurezza IT è importante."},
       report:{points:0,irony:"L'IT helpdesk ti chiamerà perplesso.",explanation:"Questa era una richiesta IT legittima. Segnalarla crea confusione e potrebbe farti perdere l'accesso ai sistemi aziendali."},
-      delete:{points:5,irony:"Prudente, ma domani mattina non entri nei sistemi.",explanation:"Se hai dubbi su una comunicazione IT aziendale, verifica chiamando direttamente l'helpdesk invece di eliminare."}
+      delete:{points:0,irony:"Prudente, ma domani mattina non entri nei sistemi.",explanation:"Se hai dubbi su una comunicazione IT aziendale, verifica chiamando direttamente l'helpdesk invece di eliminare."}
     }
   },
   {
     id:10, type:"email", difficulty:"normal", title:"L'email più ovvia di sempre",
-    sender:"tirubiamoisoldi@gmail.com", senderName:"Principe Eredità",
+    sender:"tirubiamoisoldi@gmail.com", senderName:"Principe Mohammed Alkhazar",
     subject:"EREDITÀ DI €4.500.000 — URGENTE",
-    body:"Caro amico prezioso,\n\nSono il Principe Mohammed Al-Rashid del Qatar.\n\nHo eredità di €4.500.000 che devo trasferire fuori dal paese in SEGRETO per motivi politici molto complicati.\n\nHo bisogno di persona fidata come te per ricevere i soldi. Ti darò il 30% = €1.350.000!!!\n\nDevi solo mandare:\n• Copia passaporto\n• Numero conto corrente\n• Anticipo spese bancarie: €500\n\nRisposta URGENTE richiesta!\n\nPrincipe Mohammed",
+    body:"Caro amico prezioso,\n\nSono il Principe Mohammed Alkhazar del Marocco.\n\nHo eredità di €4.500.000 che devo trasferire fuori dal paese in SEGRETO per motivi politici molto complicati.\n\nHo bisogno di persona fidata come te per ricevere i soldi. Ti darò il 30% = €1.350.000!!!\n\nDevi solo mandare:\n• Copia passaporto\n• Numero conto corrente\n• Anticipo spese bancarie: €500\n\nRisposta URGENTE richiesta!\n\nPrincipe Mohammed",
     choices:{
-      click:{points:"GAMEOVER",irony:"Il Principe è commosso dalla tua fiducia. I tuoi €500 andranno in buone mani. Le sue.",explanation:"La 'truffa del principe nigeriano' esiste da decenni ed è ancora attiva perché funziona su chi non la conosce. Il mittente Gmail, la richiesta di anticipo, la promessa di milioni: tutti segnali inequivocabili."},
+      click:{points:"GAMEOVER",irony:"Il Principe Alkhazar è commosso dalla tua fiducia. I tuoi €500 andranno in buone mani: le sue.",explanation:"La 'truffa del principe nigeriano' esiste da decenni ed è ancora attiva perché funziona su chi non la conosce. Il mittente Gmail, la richiesta di anticipo, la promessa di milioni: tutti segnali inequivocabili."},
       report:{points:10,irony:"Perfetto. Anche il principe ha capito.",explanation:"Segnalare queste email è utile perché aiuta i filtri antispam a migliorare. Nonostante sembrino ovvie, queste truffe colpiscono ancora migliaia di persone ogni anno."},
-      delete:{points:5,irony:"Saggio. L'eredità resterà al principe.",explanation:"Eliminare è corretto. Il mittente 'tirubiamoisoldi@gmail.com' avrebbe dovuto essere sufficiente come campanello d'allarme immediato."}
+      delete:{points:5,irony:"Saggio. L'eredità resterà al principe.",explanation:"Eliminare è corretto, ma il mittente 'tirubiamoisoldi@gmail.com' avrebbe dovuto essere sufficiente come campanello d'allarme immediato."}
     }
   },
   {
@@ -135,7 +135,7 @@ const scenarios = [
     body:"Carissimo/a!\n\nDEVI ASSOLUTAMENTE CONDIVIDERE questo messaggio con 20 persone ENTRO OGGI!\n\n⚠️ WhatsApp diventerà A PAGAMENTO tra 24 ore!\n\n💸 Costerà €5,99 al mese!\n\nL'unico modo per mantenere WhatsApp GRATUITO è condividere questo messaggio con almeno 20 contatti. WhatsApp controlla chi condivide!\n\nHO GIÀ CONDIVISO E IL MIO ACCOUNT È AL SICURO ✅\n\nP.S. Fallo ora prima che sia troppo tardi! 🙏",
     choices:{
       click:{points:"GAMEOVER",irony:"Hai appena inviato disinformazione a 20 persone. Zia Carla è orgogliosa.",explanation:"Condividere catene false è considerato GAME OVER perché diffonde disinformazione, crea panico inutile e potrebbe contenere link dannosi. WhatsApp non diventa mai a pagamento tramite catene."},
-      report:{points:5,irony:"Bene. Magari spiega anche alla zia come funziona.",explanation:"Segnalare catene false è utile. Puoi anche gentilmente informare i tuoi contatti che si tratta di disinformazione — molti non lo sanno."},
+      report:{points:5,irony:"Bene. Magari spiega anche alla zia come funziona.",explanation:"Segnalare catene false è utile, ma puoi anche gentilmente informare i tuoi contatti che si tratta di disinformazione — molti non lo sanno."},
       delete:{points:10,irony:"Perfetto. E poi spiega alla zia che WhatsApp è gratuito per scelta di Meta.",explanation:"Eliminare senza condividere è la risposta corretta. Le catene WhatsApp sono sempre false: WhatsApp non diventa mai a pagamento tramite condivisione di messaggi."}
     }
   },
@@ -147,7 +147,7 @@ const scenarios = [
     choices:{
       click:{points:"GAMEOVER",irony:"L'ordine che non hai fatto è costato meno dei tuoi dati bancari.",explanation:"Errori ortografici ('reconosci'), dominio non ufficiale (amazon-supporto-clienti.org invece di amazon.it), ordine che non ricordi: tre segnali chiari. Amazon usa solo @amazon.it o @amazon.com."},
       report:{points:10,irony:"Ottimo. Amazon reale ti ringrazierebbe.",explanation:"Segnalare tentativi di phishing che usano il brand Amazon aiuta sia Amazon sia altri utenti. Puoi segnalarli a stop-spoofing@amazon.com."},
-      delete:{points:5,irony:"Giusto. L'ordine non esiste comunque.",explanation:"Eliminare è corretto. In caso di dubbio su ordini reali, accedi sempre direttamente all'app Amazon."}
+      delete:{points:5,irony:"Giusto. L'ordine non esiste comunque.",explanation:"Eliminare è corretto, ma in questo caso potevi segnalare aiutando altri utenti. Se hai un dubbio su ordini reali, accedi sempre direttamente all'app Amazon."}
     }
   },
   {
@@ -158,7 +158,7 @@ const scenarios = [
     choices:{
       click:{points:"GAMEOVER",irony:"Hai appena inviato tutto il necessario per un furto di identità. Bel colloquio.",explanation:"Segnali di truffa: €3.500/mese senza esperienza, dominio .biz sospetto, richiesta immediata di IBAN e documento identità. Le aziende serie non chiedono mai l'IBAN prima di un colloquio."},
       report:{points:10,irony:"Corretto. Laura non esiste, ma la segnalazione aiuta.",explanation:"Segnalare offerte di lavoro fraudolente è importante. Puoi farlo anche alla piattaforma dove hai trovato il contatto (LinkedIn, ecc.) e alla Polizia Postale."},
-      delete:{points:5,irony:"Saggio. €3.500 senza esperienza non esiste.",explanation:"Eliminare è corretto. Regola: nessuna azienda seria chiede IBAN e documento identità prima ancora di un colloquio."}
+      delete:{points:5,irony:"Saggio. €3.500 senza esperienza è un sogno.",explanation:"Eliminare è corretto. Regola: nessuna azienda seria chiede IBAN e documento identità prima ancora di un colloquio."}
     }
   },
   {
@@ -174,13 +174,13 @@ const scenarios = [
   },
   {
     id:15, type:"email", difficulty:"normal", title:"Eredità dal Principe (inglese)",
-    sender:"prince.ali@royalfamily-dubai.co", senderName:"Prince Ali Mohammed",
+    sender:"prince.ali@royalfamily-dubai.co", senderName:"Prince Palmer",
     subject:"CONFIDENTIAL — Inheritance Transfer $8,500,000 USD",
-    body:"STRICTLY CONFIDENTIAL\n\nDear Friend,\n\nI am Prince Ali Mohammed, member of the Royal Family of Dubai.\n\nI have a fortune of $8,500,000 USD that I need to transfer outside the country urgently.\n\nI need a trusted foreign partner. You will receive 40% = $3,400,000 USD.\n\nThis is 100% legal and secure.\n\nTo begin the transfer I need:\n• Full name and address\n• Bank account details\n• Processing fee: $1,200 USD\n\nPlease respond URGENTLY and keep this CONFIDENTIAL.\n\nGod bless you,\nPrince Ali",
+    body:"STRICTLY CONFIDENTIAL\n\nDear Friend,\n\nI am Prince Cole Palmer, member of the Royal Family of Dubai.\n\nI have a fortune of $8,500,000 USD that I need to transfer outside the country urgently.\n\nI need a trusted foreign partner. You will receive 40% = $3,400,000 USD.\n\nThis is 100% legal and secure.\n\nTo begin the transfer I need:\n• Full name and address\n• Bank account details\n• Processing fee: $1,200 USD\n\nPlease respond URGENTLY and keep this CONFIDENTIAL.\n\nGod bless you,\nPrince Ali",
     choices:{
       click:{points:"GAMEOVER",irony:"Il Principe ti ringrazia per il tuo contributo alla sua pensione.",explanation:"La variante inglese della truffa del principe è ancora più diffusa. 'Processing fee' = anticipo truffa. Nessun principe reale ha bisogno del tuo conto bancario trovato casualmente. Questa è la 'advance fee fraud' o '419 scam'."},
-      delete:{points:10,irony:"Saggio. I milioni resteranno nel Qatar immaginario.",explanation:"Eliminare immediatamente è la risposta corretta. Questa email non merita nemmeno una segnalazione approfondita: è spam classico che i filtri dovrebbero già bloccare."},
-      report:{points:5,irony:"Utile per i filtri antispam.",explanation:"Segnalare è comunque utile per migliorare i filtri spam. Ma eliminare e basta era già sufficiente per questa truffa così evidente."}
+      report:{points:10,irony:"Saggio. I milioni resteranno nel Qatar immaginario.",explanation:"Segnalare immediatamente è la risposta corretta. Questa email merita una segnalazione approfondita: è spam classico a cui filtri dovrebbero lavorare"},
+      delete:{points:10,irony:"Utile per i filtri antispam.",explanation:"Eliminare è già sufficiente per questa truffa così evidente."}
     }
   },
   {
@@ -211,7 +211,7 @@ const scenarios = [
     body:"Il tuo Apple ID è stato usato per accedere a iCloud tramite un browser web.\n\nData e ora: oggi, 23:47\nPosizione: Mosca, Russia\nDispositivo: browser web\n\nSe sei stato tu, puoi ignorare questa email.\n\nSe NON eri tu, il tuo account potrebbe essere compromesso.\n[Rivedi l'attività dell'account]\n\nApple Support",
     choices:{
       delete:{points:10,irony:"Saggio. Vai direttamente su appleid.apple.com per verificare.",explanation:"Non cliccare mai link nelle email di notifica di sicurezza, anche se sembrano legittime. Vai SEMPRE direttamente al sito ufficiale digitandolo tu stesso. Apple invia queste notifiche, ma i phisher le copiano perfettamente."},
-      report:{points:5,irony:"Bene, ma verifica l'accesso su appleid.apple.com.",explanation:"Segnalare è utile, ma non dimenticate di verificare l'accesso direttamente su appleid.apple.com per sicurezza."},
+      report:{points:0,irony:"Verifica l'accesso su appleid.apple.com.",explanation:"Segnalare è utile, ma non dimenticate di verificare l'accesso direttamente su appleid.apple.com per sicurezza."},
       click:{points:0,irony:"Potresti essere al sicuro se era vera. Ma era una buona idea cliccare?",explanation:"Anche se questa email fosse autentica, la procedura corretta è mai cliccare link nelle email di sicurezza. Vai sempre direttamente al sito. Questa abitudine ti protegge anche quando l'email è falsa."}
     }
   },
@@ -233,11 +233,12 @@ const scenarios = [
     body:"Hai inviato un pagamento\n\nImporto: €347,00\nDestinatario: TechStore Milano\nData: oggi\nID transazione: 8G847291JK293847T\n\nSe NON hai autorizzato questo pagamento, clicca qui per aprire una disputa ENTRO 24 ORE.\n\n[Apri disputa e recupera i fondi]\n\nPayPal ti protegge sempre.\n\nIl Team PayPal",
     choices:{
       report:{points:10,irony:"Hai notato il dominio? 'paypaI.com' con la 'I' maiuscola. Impressionante.",explanation:"Questo scenario rappresenta un attacco di 'homograph' o 'typosquatting': il dominio sembra 'paypal.com' ma usa caratteri visivamente identici (I maiuscola invece di l minuscola). Quasi impossibile da distinguere. Segnalare è la mossa giusta."},
-      delete:{points:5,irony:"Bene, ma verifica l'app PayPal reale per sicurezza.",explanation:"Eliminare è sicuro. Controlla sempre direttamente sull'app PayPal ufficiale se c'è stata davvero una transazione, senza cliccare nessun link email."},
+      delete:{points:0,irony:"Verifica l'app PayPal reale per sicurezza.",explanation:"Eliminare è sicuro ma devi controllare sempre direttamente sull'app PayPal ufficiale se c'è stata davvero una transazione, senza cliccare nessun link email."},
       click:{points:"GAMEOVER",irony:"paypaI.com con la 'I' maiuscola. Un pixel di differenza, tutti i tuoi soldi di differenza.",explanation:"Questo è uno degli attacchi più sofisticati: il dominio usa caratteri Unicode visivamente identici alle lettere standard. 'paypaI.com' (con la I maiuscola) sembra identico a 'paypal.com'. Per questo non bisogna mai cliccare link nelle email bancarie — vai sempre direttamente all'app."}
     }
   }
 ];
+
 
 const EmailUI = ({data}) => (
   <div style={{background:"#fff",borderRadius:"8px",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,0.15)",fontFamily:"Arial,sans-serif",fontSize:"14px"}}>
